@@ -39,7 +39,7 @@ elif klasa == "3":
 stru = Struktura(klasa + ".txt")
 
 Code.generate()
-
+player.sword.append(Weapon("kot", 100, 100, 0))
 while True:
-    stru.p_move(player)
-
+    #stru.p_move(player)
+    player.attack()

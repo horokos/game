@@ -6,10 +6,11 @@ from Items import Armor
 
 class Player:
     def __init__(self,weapon,armor):
-        self.hp = 300
+        self.hp = 1000
         self.exp = 0
         self.lvl = 1
-        self.sword = weapon
+        self.sword = []
+        self.sword.append(weapon)
         self.armor = armor
 
     def attack(self):
@@ -21,29 +22,21 @@ class Player:
             self.slow_print("Twoje hp " + str(self.hp) + "\nHp przeciwnika " + str(enemy_hp), 0.005)
 
             while True:
-                self.slow_print("Jak chcesz atakować? (Silny/Szybki)\n", 0.005)
-                p_attack = input(">>>")
+                for x in range(0, len(self.sword)):
+                    self.slow_print(self.sword[x].name, 0.005)
+                p = int(input(">>>"))  #wyskakuje blad gdy niedamy wartosci!!!!
 
-                if p_attack.upper() == "SILNY" and random.randint(0, 100) < self.sword.chance/2:
-                    if random.randint(0, 100)>self.sword.crit:
-                        tmp = self.sword.dmg + random.randint(-10, 10)
+                if p < len(self.sword) and random.randint(0, 100) < self.sword[p].chance:
+                    if random.randint(1, 100) > self.sword[p].crit:
+                        tmp = self.sword[p].dmg + random.randint(-10, 10)
                     else:
-                        tmp = (self.sword.dmg + random.randint(-10, 10))*2
+                        tmp = (self.sword[p].dmg + random.randint(-10, 10))*2
                     enemy_hp -= tmp
                     self.slow_print("Trafiłeś za " + str(tmp), 0.01)
                     break
 
-                elif p_attack.upper() == "SZYBKI" and random.randint(0, 100) < self.sword.chance:
-                    if random.randint(0, 100) > self.sword.crit:
-                        tmp = self.sword.dmg / 2 + random.randint(-10,10)
-                    else:
-                        tmp = (self.sword.dmg / 2 + random.randint(-10,10))*2
-                    enemy_hp -= tmp
-                    self.slow_print("Trafiłeś za " + str(tmp), 0.01)
-                    break
-
-                elif p_attack.upper() != "SZYBKI" and p_attack.upper() != "SILNY":
-                    print("Musisz wpisać Silny/Szybki\n")
+                elif p > len(self.sword):
+                    print("Wpisz odpowiednia liczbe\n")
 
                 else:
                     print("Chybiłeś :(\n")
@@ -56,7 +49,7 @@ class Player:
                 break
 
             tmp = random.randint(10, 20)
-            self.update_hp(tmp*(100 - self.armor.armor)/100)
+            self.update_hp(int(tmp*(100 - self.armor.armor)/100))
 
     def update_lvl(self, value):
         time.sleep(0.05)
@@ -93,7 +86,7 @@ class Player:
         self.armor = Armor(name, armor)
 
     def change_sword(self, name, dmg, chance, crit):
-        self.sword = Weapon(name, dmg, chance, crit)
+        self.sword.append(Weapon(name, dmg, chance, crit))
 
     @staticmethod
     def slow_print(string, sec):
